@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,11 +13,10 @@ namespace laba5.net
     class Program
     {
         private string Organization_1 { get; set; } = "Georgin";
-        private string InsuranceCompany_1 { get; set; } = "Universalna";
+        private string InsuranceCompany_1 { get; set; } = "Universalna" ;
         private string OilGasCompany_1 { get; set; } = "Gasprom";
         private string Plant_1 { get; set; } = "Biofarm";
-
-     
+       
         public Program(string New_Plant, string New_Organization, string New_InsuranceCompany, string New_OilGasCompany)
         {
             Plant_1 = New_Plant;
@@ -37,15 +36,17 @@ namespace laba5.net
         public void Input()
         {
             Information inform = new Information(Plant_1, Organization_1, InsuranceCompany_1, OilGasCompany_1);
-            Write(inform);
+            Information inform1 = new Information(Plant_1, Organization_1, InsuranceCompany_1, OilGasCompany_1);
+            Write(inform,inform1);
         }
-        static void Write(Plant1 plant)
-        {
-            Multicast writeInfo = plant.Write_Plant;
+        static void Write(IPlant plant, ICompany company)
+        {           
+            Multicast writeInfo = plant.Write_Plant; 
+            writeInfo += company.Write_Company;
             writeInfo();
         }
     }
-    class Information : Plant1
+    class Information : IPlant, ICompany
     {
         private string Plant { get; set; }
         private string Organization { get; set; }
@@ -62,10 +63,15 @@ namespace laba5.net
         }
         public Information()
         { }
-        void Plant1.Write_Plant()
+       
+        void IPlant.Write_Plant()
         {
             Console.WriteLine($"\nДанные о организации:\nЗавод: " + Plant);
             Console.WriteLine($"Организация: " + Organization);
+           
+        }
+        void ICompany.Write_Company()
+        {
             Console.WriteLine($"Страховая компания: " + InsuranceCompany);
             Console.WriteLine($"Нефтегазовая компания: " + OilGasCompany + "\n");
             Console.Write("Если вы хотите изменить данные нажмите 1, если нет - нажмите любое другое число.\n");
@@ -81,19 +87,22 @@ namespace laba5.net
                 Console.ReadLine();
             }
         }
-        static void Write_1(ChangeInfo1 write)
+        static void Write_1(IChangeInfo write)
         {
             Unicast writeInfo = write.Change_Info;
             writeInfo();
         }
     }
 
-    interface Plant1
+    interface IPlant
     {
         void Write_Plant();
     }
-  
-    class ChangeInfo : ChangeInfo1
+    interface ICompany
+    {
+        void Write_Company();
+    }
+    class ChangeInfo : IChangeInfo
     {
         private string New_Plant { get; set; }
         private string New_Organization { get; set; }
@@ -103,7 +112,7 @@ namespace laba5.net
         public ChangeInfo()
         { }
 
-        void ChangeInfo1.Change_Info()
+        void IChangeInfo.Change_Info()
         { 
        
             Console.Write("\nВведите новое название завода: ");
@@ -120,7 +129,7 @@ namespace laba5.net
         }
     }
 
-    interface ChangeInfo1
+    interface IChangeInfo
     {
         void Change_Info();
     }
